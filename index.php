@@ -1,4 +1,17 @@
 <?php
+mb_internal_encoding("UTF-8");
+function autoloadFunction($class)
+{
+    require('app/' . $class . '.php');
+}
+
+spl_autoload_register('autoloadFunction');
+
+if (isset($_POST['english_text']))
+{
+    $translator = new Translator();
+    $pigLatin = $translator->translateAll($_POST['english_text']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,15 +46,15 @@
         <p class="lead">Welcome to english pig latin translator. If you want to translate your text to pig latin, please
             use the form below.</p>
 
-        <form>
+        <form method="post" >
             <div class="form-group">
                 <label for="englishInput">Paste your text here:</label>
-                <textarea class="form-control" id="englishInput" rows="5"></textarea>
+                <textarea class="form-control" id="englishInput" name="english_text" rows="5" required="required"><?php if(isset ($_POST['english_text'])) echo (htmlspecialchars($_POST['english_text'])); ?></textarea>
             </div>
             <button type="submit" class="btn btn-default">Translate</button>
             <div class="form-group">
                 <label for="translationResult">Your text translated to pig latin:</label>
-                <textarea class="form-control" id="translationResult" rows="5"></textarea>
+                <textarea class="form-control" id="translationResult" name="pig_latin" rows="5" readonly="readonly"><?php if(!empty($pigLatin)) echo (htmlspecialchars($pigLatin)); ?></textarea>
             </div>
         </form>
     </div>
