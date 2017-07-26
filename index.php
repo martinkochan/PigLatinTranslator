@@ -43,6 +43,9 @@ if (isset($_POST['english_text']))
         <div class="page-header">
             <h1>Pig Latin Translator</h1>
         </div>
+          <?php if(isset($translator->error) && (!empty($translator->error))) : ?>
+          <div class="alert alert-info" role="alert"><?php echo($translator->error); ?></div>  
+          <?php endif ?>
         <p class="lead">Welcome to english pig latin translator. If you want to translate your text to pig latin, please
             use the form below.</p>
 

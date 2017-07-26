@@ -8,6 +8,13 @@ class Translator extends PigLatin
       /* variable where prepared data for translation are stored */
 
       private $inputArray;
+      private $validator;
+      public $error = '';
+
+      public function __construct()
+      {
+            $this->validator = new Validator();
+      }
 
       /**
        * Function handles translation of all input data including preserving symbols that are not for translation (f.e. +!?,) 
@@ -17,18 +24,28 @@ class Translator extends PigLatin
       public function translateAll($input)
       {
             $result = '';
-            /* preparation of data and transforamtion to array of words and other symbols */
-            $this->inputArray = $this->prepare($input);
-
-            foreach ($this->inputArray as $word)
+            /*try-catch block if there is error during validation of users input */ 
+            try
             {
-                  /* if $word is not actually word or number, add it directly to output result.If it is, translate word and add it to output result */
-                  if ($this->recognizeWord('/^' . self::SYMBOL . '/', $word))
+                  /* Validation and preparation of data, transformation to array of words and other symbols */
+                  $this->inputArray = $this->prepare($input);
+            } catch (UserError $error)
+            {
+                  $this->error = $error->getMessage();
+            }
+            /* if data are succesfully validated, proceed to translation */
+            if (empty($this->error))
+            {
+                  foreach ($this->inputArray as $word)
                   {
-                        $result .= $word;
-                  } else
-                  {
-                        $result .= $this->translateWord($word);
+                        /* if $word is not actually word or number, add it directly to output result.If it is, translate word and add it to output result */
+                        if ($this->recognizeWord('/^' . self::SYMBOL . '/', $word))
+                        {
+                              $result .= $word;
+                        } else
+                        {
+                              $result .= $this->translateWord($word);
+                        }
                   }
             }
             return $result;
@@ -41,6 +58,7 @@ class Translator extends PigLatin
        */
       public function prepare($input)
       {
+            $this->validator->validate($input);
             $input = strtolower($input);
 
             $exploded = preg_split('/' . self::SYMBOL . '/m', $input, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);

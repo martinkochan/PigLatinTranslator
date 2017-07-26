@@ -8,9 +8,9 @@ class PigLatin
       /* Pig latin rules for all types of words. Defined with regular expressions*/
       const
               VOWEL_WORD = '/^([aeiou]+)(.*)/',
-              CONSONANT_WORD = '/^([^aeiou\W_]+)(.*)/',
+              CONSONANT_WORD = '/^([^aeiou\W\d_]+)(.*)/',
               EXCEPTION_WORDS = '/^(qu){1}(.*)/',
-              SYMBOL = '(\W+)',
+              SYMBOL = '([\W_]+)',
               NUMBER = '/^([0-9])(.*)/',
               VOWELS_SUFFIX = 'way',
               SILENT_CONSONANT = array('honest', 'hour', 'heir', 'honor', 'homage', 'herb');
