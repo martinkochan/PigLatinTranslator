@@ -3,12 +3,14 @@
 class Validator
 {
       /**
-       * Function checks users input data if they are valid for translation
+       * Function checks users input data if they are valid for translation.
+       * Note: there is probably better format for regular expressions. In this solution order of "ifs" matters .
        * @param string $input Users input data
        * @throws UserError When incorrect data for translation are inserted by user
        */
       public function validate($input)
       {     
+            
             if (preg_match('/^[\s]+$/', $input))
                   throw new UserError('You did not enter anything. Please enter some words.');
             
@@ -23,5 +25,6 @@ class Validator
             
             if(!preg_match('/([a-zA-Z]+)/', $input))
                   throw new UserError('You did not enter any word. Please enter some words.');
+            
       }
 }

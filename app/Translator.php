@@ -29,7 +29,8 @@ class Translator extends PigLatin
             {
                   /* Validation and preparation of data, transformation to array of words and other symbols */
                   $this->inputArray = $this->prepare($input);
-            } catch (UserError $error)
+            } 
+            catch (UserError $error)
             {
                   $this->error = $error->getMessage();
             }
@@ -58,7 +59,16 @@ class Translator extends PigLatin
        */
       public function prepare($input)
       {
+            /* Run validation function only if there are no letters/words in input string, to see what user entered wrong. */
+            if (!preg_match('/([a-zA-Z]+)/', $input))
+            {
             $this->validator->validate($input);
+            }
+            /* 
+             * NOTE: As there are no strict rules for uppercase/lowercase letters in Pig Latin, all letters will be set to lowercase. It is more practical,easier and esthetic choice.
+             * Of course to preserve or switch shifting letters so that first letter in translated word is uppercased and the orignal lowercased, is more challenging solution not implemented in this translator,
+             * so it could be considered as a little shortcoming. 
+             */
             $input = strtolower($input);
 
             $exploded = preg_split('/' . self::SYMBOL . '/m', $input, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
